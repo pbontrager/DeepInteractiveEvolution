@@ -169,25 +169,25 @@ def history():
 
 @app.route('/addNeural', methods=['GET', 'POST'])
 def addNeural():
-    form = RegisterNNForm();
-    if form.validate_on_submit():
+    NNform = forms.RegisterNNForm();
+    if NNform.validate_on_submit():
         neuralnetwork = NeuralNetwork(id=form.id.data, name=form.name.data)
         db.session.add(neuralnetwork)
         db.session.commit()
         flash('Congratulations, you are now a registered Neural Network!')
         return redirect(url_for('develop'))
-    return render_template('addNeural.html', title='Deep IE', form=form)
+    return render_template('addNeural.html', title='Deep IE', form=NNform)
 
 @app.route('/addEvol', methods=['GET', 'POST'])
 def addEvol():
-    form = RegisterEAForm();
-    if form.validate_on_submit():
+    NNform = forms.RegisterEAForm();
+    if NNform.validate_on_submit():
         evolutionAl = EvolAl(id=form.id.data, name=form.name.data)
         db.session.add(evolutionAl)
         db.session.commit()
         flash('Congratulations, you are now a registered Evolution Algorithm!')
         return redirect(url_for('develop'))
-    return render_template('addEvol.html', title='Deep IE', form=form)
+    return render_template('addEvol.html', title='Deep IE', NNform=form)
 
 @app.route('/addGen', methods=['GET', 'POST'])
 def addGen():

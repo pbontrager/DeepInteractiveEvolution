@@ -1,0 +1,44 @@
+{% macro render_radio_field(field) -%}
+    {% for value, label, _ in field.iter_choices() %}
+      <div class="radio">
+          <label>
+              <input type="radio" name="{{ field.id }}" id="{{ field.id }}" value="{{ value }}">{{ label }}
+          </label>
+      </div>
+    {% endfor %}
+    <td>{% if field.errors %}
+      <ul class=errors>
+      {% for error in field.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    </td>
+{%- endmacro %}
+
+{% macro render_list_group(results) -%}
+    {% for result in results %}
+      <a class="list-group-item list-group-item-action" href="{{url_for('start', values=result.name)}}">{{result.name}}</a>
+    {% endfor %}
+{%- endmacro %}
+
+{% macro render_NN(elements) -%}
+    {% for element in elements %}
+      <div>{{element.id}}, {{element.direction}}</div>
+      <button type="button" onclick="delete()">Delete</button>
+    {% endfor %}
+{%- endmacro %}
+
+{% macro render_EA(elements) -%}
+    {% for element in elements %}
+      <div>{{element.id}}, {{element.direction}}</div>
+      <button type="button" onclick="delete()">Delete</button>
+    {% endfor %}
+{%- endmacro %}
+
+{% macro render_Generator(elements) -%}
+    {% for element in elements %}
+      <div>{{element.id}}, {{element.name}}</div>
+      <button type="button" onclick="delete()">Delete</button>
+    {% endfor %}
+{%- endmacro %}

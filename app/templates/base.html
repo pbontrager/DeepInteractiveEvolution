@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="static/css/bootstrap.css" rel="stylesheet">
+    <link href="static/css/bootstrap-grid.css" rel="stylesheet">
+    <link href="static/css/bootstrap-reboot.css" rel="stylesheet">
+    <link href="static/css/customecss.css" rel="stylesheet" charset="utf-8">
+    <script src="static/js/jquery.js"></script>
+	  <script src="static/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        var id = {{ generationid }}
+    </script>
+    <script src="static/js/customer.js"></script>
+  </head>
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand mb-0 h1" href="{{url_for('index')}}"><strong>DeepIE</strong></a>
+  </nav>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-3">
+          <div style="position:fixed">
+            <h3><strong>Choose Keyword:</strong></h3>
+
+            <div class="pre-scrollable" style="max-height:300px; min-height:150px">
+              <div class="list-group" id="list-tab" role="tablist">
+                {% from 'macro.html' import render_list_group %}
+                  {{render_list_group(results)}}
+              </div>
+            </div>
+
+            {% if select %}
+              <form id="form1">
+                <p>
+                {{ select.Preferrence.label }}:
+                {{ select.Preferrence(min=0.0, max=10.0, oninput="outputUpdate(value)") }}
+                <output for="Preferrence" id="Select-Preferrence">{{ select.Preferrence.data }}</output>
+                <div id="example-placeholder">
+                  <button class="btn btn-lg btn-primary btn-block" type="submit" id="btnSubmit">Next </button>
+                </div>
+                </p>
+              </form>
+            {% endif %}
+
+          </div>
+        </div>
+
+        <div class="col-9" style="min-height:500px">
+          {% block content %}{% endblock %}
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>

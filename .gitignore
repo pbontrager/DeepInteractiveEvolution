@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Apple
+*.DS_Store
+
+# Temp Directory
+./app/static/tmp/*

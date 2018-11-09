@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="static/css/bootstrap.css" rel="stylesheet">
+    <link href="static/css/customecss.css" rel="stylesheet">
+    <script src="static/js/jquery.js"></script>
+	  <script src="static/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      function delete(){
+
+      }
+    </script>
+  </head>
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand mb-0 h1" href="{{url_for('index')}}"><strong>DeepIE</strong></a>
+  </nav>
+  <body>
+    {% from 'macro.html' import render_NNEA %}
+      {{render_NN(NN)}}
+    {% from 'macro.html' import render_NNEA %}
+      {{render_EA(EA)}}
+    {% from 'macro.html' import render_Generator %}
+      {{render_Generator(GE)}}
+
+
+  </body>
+</html>

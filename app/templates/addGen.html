@@ -1,0 +1,40 @@
+<h1>Register</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.id.label }}<br>
+        {{ form.id(size=32) }}<br>
+        {% for error in form.id.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name(size=64) }}<br>
+        {% for error in form.name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.NN.label }}<br>
+        {{ form.NN(size=64) }}<br>
+        {% for error in form.NN.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.EA.label }}<br>
+        {{ form.EA(size=64) }}<br>
+        {% for error in form.EA.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.visible.label }}<br>
+        {{ form.visible(size=64) }}<br>
+        {% for error in form.visible.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>

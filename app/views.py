@@ -13,9 +13,14 @@ from flask import Flask, abort, send_file
 #from PIL import Image, ImageDraw
 import ast
 
-import generator.demo as modelserver	#where do I initialize modelserver so it persists?
+import generator.demo as modelserver
+#where do I initialize modelserver so it persists?
+### There is another file to deal with the clipper side. I think we need to import that one.
+
 #All the Clipper specific code can be added to a generator file like Demo so it is not lost.
+###Sure I have inlude that file in the directory.
 #We don't want any PyTorch Requirements
+###But clipper part need this package to return new latent Variabls.
 import evolution as evo
 
 ms = modelserver.ModelServer()
@@ -31,7 +36,7 @@ def index():
 def start():
     results = models.Generator.query.filter_by(visible=True).all()
     choice = request.args.get('values')
-    latentVar = json.loads(evo.spherical.init(20, 20))["input"]			#init needs to come from db as well as spherical
+    latentVar = json.loads(evo.spherical.init(20, 20))["input"]			#init needs to come from db as well as spherical. Do you mean import spherical from database?
     newHis = History(latentVariabls=str(latentVar), GA=str(choice))
     db.session.add(newHis)
     db.session.commit()
@@ -102,6 +107,7 @@ def prepare():
     return nextUrl
 
 #What is this for, there are no user logins?
+###This is for future use. I have not included the login part...
 @app.route('/signUpUser', methods=['GET', 'POST'])
 def signUpUser():
     data = request.data;
@@ -118,14 +124,8 @@ def signUpUser():
 
     return "/15"
 
-#?
-@app.route('/test1', methods=['GET', 'POST'])
-def test1():
-    username = "user"
-    password = "123"
-    return render_template("test1.html", username=username, password=password)
-
 #Is there a button for this?
+###I do not think so. This is only to pass the image to the web.
 @app.route('/tmp/<id>/<filename>')
 def download_file(id, filename):
     pilImage = open('./app/static/tmp/{}/'.format(id)+filename,'rb')
@@ -151,10 +151,11 @@ def show(id):
 
     return render_template('show.html', generationid=id, select=Selectform, results=results, dataset=dataset)
 
-#We need to come up with a better naming convention for all of these: 
+#We need to come up with a better naming convention for all of these:
 #Evol -> EvolutionaryStrategy (ES)
 #Gen vs Neural? -> Generator
 #Ele, history, develop?
+###Ok but it is not really convenient to change name here. Or we may need to discard the old database and build a new one. How about do this later after we finish building the demos.
 @app.route('/develop', methods=['GET', 'POST'])
 def develop():
     neural = NeuralNetwork.query.all()

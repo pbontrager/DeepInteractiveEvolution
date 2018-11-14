@@ -36,8 +36,8 @@ def index():
 def start():
     results = models.Generator.query.filter_by(visible=True).all()
     choice = request.args.get('values')
-    latentVar = json.loads(evo.spherical.init(20, 20))["input"]			#init needs to come from db as well as spherical. Do you mean import spherical from database?
-    newHis = History(latentVariabls=str(latentVar), GA=str(choice))
+    latentVar = json.loads(evo.spherical.init(20, 20))["input"]			#Database #init needs to come from db as well as spherical. Do you mean import spherical from database?
+    newHis = History(latentVariabls=str(latentVar), GA=str(choice))     #This to makedirctory, maybe make a function
     db.session.add(newHis)
     db.session.commit()
     his_ID=newHis.id
@@ -46,6 +46,7 @@ def start():
         return redirect(url_for('{}'.format(his_ID)))
     os.makedirs(directory)
 
+    #Add to clipper.py generate and save method
     #headers = {"Content-type": "application/json"}
     #x = requests.post("http://localhost:1337/" + choice + "/predict", headers=headers, data=json.dumps({"input_batch": latentVar})).json()
     #batchString = x['batch_predictions']
@@ -58,7 +59,7 @@ def start():
         #img.save("./app/static/tmp/{}/{}.png".format(his_ID, i))
         #torchvision.utils.save_image(res_tensor[i], "./app/static/tmp/{}/{}.png".format(his_ID, i), normalize=True)
 
-    imgs = ms.generate("demo_noise", latentVar)
+    imgs = ms.generate("demo_noise", latentVar)                         #Database: generator_name
     ms.save(imgs, directory)
 
     return redirect(url_for('show', id = his_ID))
@@ -77,8 +78,8 @@ def prepare():
     curlatentVar = ast.literal_eval(curlatentVar)
     curlatentVar = json.dumps({"input":curlatentVar})
     noise = preference
-    para = json.dumps({"foreign":2, "mutation":0.5})
-    nextLatentVar = evo.spherical.next(curlatentVar, choices, noise, para)
+    para = json.dumps({"foreign":2, "mutation":0.5})                                #Database: evo paramaters dictionary
+    nextLatentVar = evo.spherical.next(curlatentVar, choices, noise, para)          #Database: eval type
     nextLatentVar = json.loads(nextLatentVar)["input"]
     Gene = History.query.filter_by(id=lastid).first().GA;
     newHis = History(latentVariabls=str(nextLatentVar), GA=str(Gene), ParentHistory=lastid)
@@ -106,23 +107,23 @@ def prepare():
     nextUrl = "/" + str(his_ID)
     return nextUrl
 
-#What is this for, there are no user logins?
-###This is for future use. I have not included the login part...
-@app.route('/signUpUser', methods=['GET', 'POST'])
-def signUpUser():
-    data = request.data;
-    data = json.loads(data)
-    preference = float(data['p'])
-    cho = data["c"]
-    choice = []
-    for c in cho:
-        choice.append(int(c))
-    print(preference)
-    print(type(preference))
-    print(choice)
-    print(type(choice))
+# #What is this for, there are no user logins?
+# ###This is for future use. I have not included the login part...
+# @app.route('/signUpUser', methods=['GET', 'POST'])
+# def signUpUser():
+#     data = request.data;
+#     data = json.loads(data)
+#     preference = float(data['p'])
+#     cho = data["c"]
+#     choice = []
+#     for c in cho:
+#         choice.append(int(c))
+#     print(preference)
+#     print(type(preference))
+#     print(choice)
+#     print(type(choice))
 
-    return "/15"
+#     return "/15"
 
 #Is there a button for this?
 ###I do not think so. This is only to pass the image to the web.
@@ -138,7 +139,7 @@ def show(id):
     results = modelsGenerator.query.filter_by(visible=True).all()
     forms.Selectform = SelectForm()
     #Choices = [('1','1'), ('2','2'), ('3','3'), ('4','4'), ('5','5'), ('6','6'), ('7','7'), ('8','8'), ('9','9'), ('10','10'), ('11','11'), ('12','12'), ('13','13'), ('14','14'), ('15','15'), ('16','16'), ('17','17'), ('18','18'), ('19','19'), ('20','20')]
-    Choices = [(str(i),str(i)) for i in range(20)] #This 20 should come from the population size
+    Choices = [(str(i),str(i)) for i in range(20)]      #Database: 20 needs to be population size from evolution
     forms.Selectform.selection.choices = Choices
     tmps = os.listdir('./app/static/tmp/{}'.format(id))
     paths=[]

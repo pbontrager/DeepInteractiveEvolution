@@ -10,7 +10,7 @@ class ModelServer:
 		self.img_size = 128
 
 		#Load trained models here (or a server/logic to manage which models are loaded)
-		self.random_fc = np.random.beta(2,5,(latent_size, img_size**2))*10 - 5
+		self.random_fc = np.random.beta(2,5,(self.latent_size, self.img_size**2))*10 - 5
 
 	#generate images from latent variables return array/tensor
 	def generate(self, model, latent_variables):

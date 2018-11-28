@@ -12,6 +12,7 @@ from io import BytesIO
 from flask import Flask, abort, send_file
 #from PIL import Image, ImageDraw
 import ast
+import db_commands as dbc
 
 import generator.demo as modelserver
 #where do I initialize modelserver so it persists?
@@ -36,14 +37,17 @@ def index():
 def start():
     results = models.Generator.query.filter_by(visible=True).all()
     choice = request.args.get('values')
-    latentVar = json.loads(evo.spherical.init(20, 20))["input"]			#Database #init needs to come from db as well as spherical. Do you mean import spherical from database?
-    newHis = History(latentVariabls=str(latentVar), GA=str(choice))     #This to makedirctory, maybe make a function
-    db.session.add(newHis)
-    db.session.commit()
-    his_ID=newHis.id
-    directory = "./app/static/tmp/{}".format(his_ID)
+    latentVar = createNewLatent()
+    print(latentVar, type(latentVar))
+    newHisID = createNewHistory(latentVar, choice)
+    # latentVar = json.loads(evo.spherical.init(20, 20))["input"]			#Database #init needs to come from db as well as spherical. Do you mean import spherical from database?
+    # newHis = History(latentVariabls=str(latentVar), GA=str(choice))     #This to makedirctory, maybe make a function
+    # db.session.add(newHis)
+    # db.session.commit()
+    # his_ID=newHis.id
+    directory = "./app/static/tmp/{}".format(newHisID)
     if os.path.exists(directory):
-        return redirect(url_for('{}'.format(his_ID)))
+        return redirect(url_for('{}'.format(newHisID)))
     os.makedirs(directory)
 
     #Add to clipper.py generate and save method
@@ -62,7 +66,7 @@ def start():
     imgs = ms.generate("demo_noise", latentVar)                         #Database: generator_name
     ms.save(imgs, directory)
 
-    return redirect(url_for('show', id = his_ID))
+    return redirect(url_for('show', id = newHisID))
 
 
 @app.route('/prepare',methods=['GET', 'POST'])
@@ -74,21 +78,24 @@ def prepare():
     for c in cho:
         choices.append(int(c))
     lastid = int(data["id"])
-    curlatentVar = History.query.filter_by(id = lastid).first().latentVariabls
-    curlatentVar = ast.literal_eval(curlatentVar)
-    curlatentVar = json.dumps({"input":curlatentVar})
+    curlatentVar = createCurLatentVar()
+    # curlatentVar = History.query.filter_by(id = lastid).first().latentVariabls
+    # curlatentVar = ast.literal_eval(curlatentVar)
+    # curlatentVar = json.dumps({"input":curlatentVar})
     noise = preference
     para = json.dumps({"foreign":2, "mutation":0.5})                                #Database: evo paramaters dictionary
-    nextLatentVar = evo.spherical.next(curlatentVar, choices, noise, para)          #Database: eval type
-    nextLatentVar = json.loads(nextLatentVar)["input"]
-    Gene = History.query.filter_by(id=lastid).first().GA;
-    newHis = History(latentVariabls=str(nextLatentVar), GA=str(Gene), ParentHistory=lastid)
-    db.session.add(newHis)
-    db.session.commit()
-    his_ID=newHis.id
-    directory = "./app/static/tmp/{}".format(his_ID)
+    nextLatentVar = createNextLatentVar(curlatentVar, choices, noise, para)
+    # nextLatentVar = evo.spherical.next(curlatentVar, choices, noise, para)          #Database: eval type
+    # nextLatentVar = json.loads(nextLatentVar)["input"]
+    Gene = History.query.filter_by(id=lastid).first().GA
+    newHisID = createNewHistory(nextLatentVar, Gene)
+    # newHis = History(latentVariabls=str(nextLatentVar), GA=str(Gene), ParentHistory=lastid)
+    # db.session.add(newHis)
+    # db.session.commit()
+    # his_ID=newHis.id
+    directory = "./app/static/tmp/{}".format(newHisID)
     if os.path.exists(directory):
-        return redirect(url_for('{}'.format(his_ID)))
+        return redirect(url_for('{}'.format(newHisID)))
     os.makedirs(directory)
 
     #headers = {"Content-type": "application/json"}
@@ -104,7 +111,7 @@ def prepare():
     imgs = ms.generate("demo_noise", nextLatentVar)
     ms.save(imgs, directory)
 
-    nextUrl = "/" + str(his_ID)
+    nextUrl = "/" + str(newHisID)
     return nextUrl
 
 # #What is this for, there are no user logins?

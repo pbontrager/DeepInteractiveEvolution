@@ -41,6 +41,6 @@ class ModelServer:
 
 #Helper Function
 def _toTensor(latent_json):
-	latent_object = json.loads(latent_json)
-	latent_list = latent_object["input"]
-	return np.array(latent_list)
+	# latent_object = json.loads(latent_json)
+	# latent_list = latent_object["input"]
+	return np.array(latent_json)

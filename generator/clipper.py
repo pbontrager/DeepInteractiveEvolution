@@ -56,7 +56,7 @@ class ModelServer:
 	    pred = pred.data.numpy()
 	    #Fix bug, append str(pred.shape) tuple as string, and append dtype
 	    return pred.astype(np.str).tolist()
-		
+
 
 	#tensor or array of image convert to image format
 	def show(self, img_array):

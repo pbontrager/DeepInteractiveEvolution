@@ -47,7 +47,12 @@
         </div>
 
         <div class="col-9" style="min-height:500px">
-          {% block content %}{% endblock %}
+          <div class="loading_block" style="display: none;">
+            <img class="loading_img" src="./static/pic/loading_4.gif">
+          </div>
+          <div id="content">
+            {% block content %}{% endblock %}
+          </div>
         </div>
 
       </div>

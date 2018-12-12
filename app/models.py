@@ -13,6 +13,8 @@ class EvolutionaryStrategy(db.Model):
     __tablename__ = 'evolutionarystrategies'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True)
+    population_size = db.Column(db.Integer)
+    latent_size = db.Column(db.Integer)
     Eusages = db.relationship('Category', backref='EvolutionaryStrategy', lazy='dynamic')
 
     def __repr__(self):

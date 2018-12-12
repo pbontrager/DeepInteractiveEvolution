@@ -37,7 +37,7 @@ def index():
 def start():
     results = dbc.getVisibleModel()
     choice = request.args.get('values')
-    latentVar = dbc.createNewLatent()
+    latentVar = dbc.initPopulation(choice)
     newHisID = dbc.createNewHistory(latentVar, choice)
     # latentVar = json.loads(evo.spherical.init(20, 20))["input"]			#Database #init needs to come from db as well as spherical. Do you mean import spherical from database?
     # newHis = History(latentVariabls=str(latentVar), GA=str(choice))     #This to makedirctory, maybe make a function

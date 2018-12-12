@@ -7,11 +7,16 @@ import evolution as evo
 def getVisibleModel():
     return models.Category.query.filter_by(visible=True).all()
 
-def createNewLatent():
+def initPopulation(category):
     # evolution_algrith = Evol.query.filter_by(id = 1).first()
     # evo.evolution_algrith.
     # eval("evo.{}.init({},{})".format(a,b,c)) )
-    return json.loads(evo.spherical.init(20, 20))["input"]
+    es_index =  models.Category.query.filter_by(name=category).first().ES
+    evolutionarystrategy = models.EvolutionaryStrategy.query.filter_by(id=es_index).first()
+    es_name = evolutionarystrategy.name
+    es_population = evolutionarystrategy.population_size
+    es_latentsize = evolutionarystrategy.latent_size
+    return json.loads(eval("evo.{}.init({},{})".format(es_name,es_population,es_latentsize)))["input"]
 
 def getCurLatentVar(lastid):
     curlatentVar = models.History.query.filter_by(id = lastid).first().latentVariabls
